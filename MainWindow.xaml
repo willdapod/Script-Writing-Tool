@@ -1,0 +1,52 @@
+﻿<Window x:Class="ScriptWritingTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Script Writer" Height="600" Width="800">
+
+    <Grid>
+        <DockPanel>
+            <!-- Sidebar for Characters & Scenes -->
+            <StackPanel DockPanel.Dock="Left" Width="250" Background="#333">
+                <TextBlock Text="Characters" Foreground="White" FontSize="16" Margin="10"/>
+                <ListBox ItemsSource="{Binding Characters}" DisplayMemberPath="Name"
+                         SelectedItem="{Binding SelectedCharacter}" Height="100"/>
+                <Button Content="Add Character" Command="{Binding AddCharacterCommand}" Margin="5"/>
+
+                <TextBlock Text="Scenes" Foreground="White" FontSize="16" Margin="10"/>
+                <ListBox ItemsSource="{Binding Scenes}" DisplayMemberPath="Title"
+                         SelectedItem="{Binding CurrentScene}" Height="100"/>
+                <Button Content="Add Scene" Command="{Binding AddSceneCommand}" Margin="5"/>
+            </StackPanel>
+
+            <!-- Main Content Area -->
+            <Grid>
+                <TextBlock Text="Script Editor" FontSize="18" Margin="10"/>
+                <ListBox ItemsSource="{Binding CurrentScene.ScriptLines}" Margin="10" Height="200">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Speaker.Name, TargetNullValue='[TRANSITION]'}" 
+                           FontWeight="Bold" />
+
+                                <TextBox AcceptsReturn="True" 
+                         SpellCheck.IsEnabled="True"
+                         Text="{Binding Dialogue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Width="400" Height="50"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+
+                <Button Content="Add Line" Command="{Binding AddScriptLineCommand}" />
+                <Button Content="Save" Command="{Binding SaveCommand}" Margin="5"/>
+                <Button Content="Load" Command="{Binding LoadCommand}" Margin="5"/>
+
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <ComboBox ItemsSource="{Binding SceneTransitions}" SelectedItem="{Binding SelectedTransition}" Width="120"/>
+                    <Button Content="Add Transition" Command="{Binding AddTransitionCommand}" Margin="5"/>
+                </StackPanel>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
