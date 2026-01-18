@@ -22,6 +22,42 @@
             --accent: #38bdf8;
             --text-main: #f8fafc;
             --text-dim: #94a3b8;
+
+            /* Settings Variables */
+            --editor-font-size: 18px;
+            --editor-line-height: 1.2;
+        }
+
+        /* Accessibility Overrides */
+        body.high-contrast {
+            --bg-primary: #000000;
+            --bg-secondary: #000000;
+            --accent: #ffff00;
+            --text-main: #ffffff;
+            --text-dim: #dddddd;
+        }
+
+        body.high-contrast .glass-panel,
+        body.high-contrast header,
+        body.high-contrast .absolute {
+            background: #000000;
+            backdrop-filter: none;
+            border-color: #ffffff;
+        }
+
+        body.high-contrast button {
+            border: 1px solid #ffffff;
+        }
+
+        body.reduced-motion * {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        body.dyslexic-font .courier {
+            font-family: 'Comic Sans MS', 'Verdana', sans-serif;
+            line-height: 1.5;
+            /* Better readability */
         }
 
         body {
@@ -39,7 +75,8 @@
         #editor {
             outline: none;
             min-height: 100%;
-            line-height: 1.2;
+            line-height: var(--editor-line-height);
+            font-size: var(--editor-font-size);
             padding-bottom: 50vh;
         }
 
@@ -157,7 +194,8 @@
                 title="Export as Text">
                 <i data-lucide="download" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
             </button>
-            <button class="p-2 hover:bg-slate-800 rounded-lg transition-colors group" title="Settings">
+            <button onclick="toggleSettings()" class="p-2 hover:bg-slate-800 rounded-lg transition-colors group"
+                title="Settings">
                 <i data-lucide="settings" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
             </button>
         </div>
@@ -243,6 +281,97 @@
         </main>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300"
+            id="settings-panel">
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="accessibility" class="w-6 h-6 text-sky-400"></i>
+                    Settings & Accessibility
+                </h2>
+                <button onclick="toggleSettings()" class="text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-8">
+
+                <!-- Font Size Slider -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-medium text-slate-300">Editor Font Size</label>
+                        <span id="font-size-val"
+                            class="text-xs font-mono bg-slate-800 px-2 py-1 rounded text-sky-400">18px</span>
+                    </div>
+                    <input type="range" id="font-size-slider" min="14" max="32" step="2" value="18"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                    <div class="flex justify-between text-[10px] text-slate-500 uppercase font-bold tracking-widest">
+                        <span>Small</span>
+                        <span>Normal</span>
+                        <span>Huge</span>
+                    </div>
+                </div>
+
+                <!-- Toggles Grid -->
+                <div class="space-y-4">
+                    <!-- High Contrast -->
+                    <label
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-yellow-500/10 rounded-lg group-hover:bg-yellow-500/20 transition-colors">
+                                <i data-lucide="contrast" class="w-5 h-5 text-yellow-500"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-slate-200">High Contrast</span>
+                                <span class="text-xs text-slate-500">Pure black & white UI</span>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="high-contrast-toggle"
+                            class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
+                    </label>
+
+                    <!-- Readable Font -->
+                    <label
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-pink-500/10 rounded-lg group-hover:bg-pink-500/20 transition-colors">
+                                <i data-lucide="type" class="w-5 h-5 text-pink-500"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-slate-200">Dyslexia Friendly</span>
+                                <span class="text-xs text-slate-500">Use readable sans-serif font</span>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="dyslexic-font-toggle"
+                            class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
+                    </label>
+
+                    <!-- Reduced Motion -->
+                    <label
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition-colors">
+                                <i data-lucide="zap-off" class="w-5 h-5 text-purple-500"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-slate-200">Reduced Motion</span>
+                                <span class="text-xs text-slate-500">Disable all animations</span>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="reduced-motion-toggle"
+                            class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
+                    </label>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-900/50 border-t border-slate-800 text-center">
+                <p class="text-[10px] text-slate-600">Settings are automatically saved.</p>
+            </div>
+        </div>
+    </div>
+
     <style print>
         @media print {
             body {
@@ -280,6 +409,15 @@
         const saveStatus = document.getElementById('save-status');
         const sceneList = document.getElementById('scene-list');
         const characterList = document.getElementById('character-list');
+
+        // Settings Elements
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsPanel = document.getElementById('settings-panel');
+        const fontSizeSlider = document.getElementById('font-size-slider');
+        const fontSizeVal = document.getElementById('font-size-val');
+        const highContrastToggle = document.getElementById('high-contrast-toggle');
+        const dyslexicFontToggle = document.getElementById('dyslexic-font-toggle');
+        const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
 
         let scenes = [];
         let characters = new Set();
@@ -393,6 +531,8 @@
                 editor.innerHTML = '<div class="scene-heading">EXT. ABANDONED STUDIO - DAY</div><div class="action">The camera pans across a dusty floor.</div>';
                 parseScript();
             }
+            // Load Settings on start
+            loadSettings();
         };
 
         async function exportToText() {
@@ -434,11 +574,92 @@
             }
         }
 
+        // --- Settings & Accessibility Logic ---
+
+        function toggleSettings() {
+            const isHidden = settingsModal.classList.contains('hidden');
+            if (isHidden) {
+                // Open
+                settingsModal.classList.remove('hidden');
+                // Small delay for fade in
+                setTimeout(() => {
+                    settingsModal.classList.remove('opacity-0');
+                    settingsPanel.classList.remove('scale-95');
+                    settingsPanel.classList.add('scale-100');
+                }, 10);
+            } else {
+                // Close
+                settingsModal.classList.add('opacity-0');
+                settingsPanel.classList.remove('scale-100');
+                settingsPanel.classList.add('scale-95');
+                setTimeout(() => settingsModal.classList.add('hidden'), 300);
+            }
+        }
+
+        // Close settings when clicking outside
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) toggleSettings();
+        });
+
+        function applySettings() {
+            const fontSize = fontSizeSlider.value;
+            const isHighContrast = highContrastToggle.checked;
+            const isDyslexic = dyslexicFontToggle.checked;
+            const isReducedMotion = reducedMotionToggle.checked;
+
+            // Apply Font Size
+            document.documentElement.style.setProperty('--editor-font-size', fontSize + 'px');
+            fontSizeVal.innerText = fontSize + 'px';
+
+            // Apply Classes
+            document.body.classList.toggle('high-contrast', isHighContrast);
+            document.body.classList.toggle('dyslexic-font', isDyslexic);
+            document.body.classList.toggle('reduced-motion', isReducedMotion);
+
+            // Save to LocalStorage
+            const settings = {
+                fontSize,
+                isHighContrast,
+                isDyslexic,
+                isReducedMotion
+            };
+            localStorage.setItem('script_settings', JSON.stringify(settings));
+        }
+
+        // Initialize Settings
+        function loadSettings() {
+            const saved = localStorage.getItem('script_settings');
+            if (saved) {
+                const s = JSON.parse(saved);
+
+                // Set Values
+                if (s.fontSize) fontSizeSlider.value = s.fontSize;
+                if (s.isHighContrast) highContrastToggle.checked = s.isHighContrast;
+                if (s.isDyslexic) dyslexicFontToggle.checked = s.isDyslexic;
+                if (s.isReducedMotion) reducedMotionToggle.checked = s.isReducedMotion;
+
+                // Apply
+                applySettings();
+            }
+        }
+
+        // Event Listeners for Settings
+        fontSizeSlider.addEventListener('input', applySettings);
+        highContrastToggle.addEventListener('change', applySettings);
+        dyslexicFontToggle.addEventListener('change', applySettings);
+        reducedMotionToggle.addEventListener('change', applySettings);
+
+        // --- End Settings Logic ---
+
         // Global Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
-            // Escape to toggle Focus Mode
+            // Escape to toggle settings or sidebar
             if (e.key === 'Escape') {
-                toggleSidebar();
+                if (!settingsModal.classList.contains('hidden')) {
+                    toggleSettings();
+                } else {
+                    toggleSidebar();
+                }
             }
         });
 
