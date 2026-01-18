@@ -1,0 +1,12 @@
+﻿<Window x:Class="ScriptWritingTool.Views.AddCharacterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="Add Character" Height="200" Width="300">
+    <StackPanel Margin="10">
+        <TextBlock Text="Character Name:"/>
+        <TextBox x:Name="CharacterNameBox"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="OK" Width="75" Click="OkButton_Click"/>
+            <Button Content="Cancel" Width="75" Click="CancelButton_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

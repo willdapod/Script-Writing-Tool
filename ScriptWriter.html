@@ -163,13 +163,7 @@
         </div>
     </header>
 
-    <div class="flex-1 flex overflow-hidden relative">
-        <!-- Floating Toggle (Visible when sidebar hidden) -->
-        <button id="sidebar-toggle" onclick="toggleSidebar()"
-            class="absolute top-4 left-4 z-[60] p-2 bg-slate-800/50 backdrop-blur-md rounded-lg border border-slate-700/50 hover:bg-slate-700 transition-all opacity-0 pointer-events-none group"
-            title="Toggle Sidebar">
-            <i data-lucide="menu" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
-        </button>
+    <div class="flex-1 flex overflow-hidden">
 
         <!-- Sidebar -->
         <aside class="w-64 glass-panel shrink-0 flex flex-col">
@@ -422,25 +416,13 @@
 
         function toggleSidebar() {
             const sidebar = document.querySelector('aside');
-            const toggleBtn = document.getElementById('sidebar-toggle');
             const isHidden = sidebar.classList.contains('hidden');
-
             if (isHidden) {
                 sidebar.classList.remove('hidden');
-                toggleBtn.classList.add('opacity-0', 'pointer-events-none');
             } else {
                 sidebar.classList.add('hidden');
-                toggleBtn.classList.remove('opacity-0', 'pointer-events-none');
             }
         }
-
-        // Global Keyboard Shortcuts
-        window.addEventListener('keydown', (e) => {
-            // Escape to toggle Focus Mode
-            if (e.key === 'Escape') {
-                toggleSidebar();
-            }
-        });
 
         function insertAtCursor(type) {
             const div = document.createElement('div');
