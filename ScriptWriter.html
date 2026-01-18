@@ -22,10 +22,51 @@
             --accent: #38bdf8;
             --text-main: #f8fafc;
             --text-dim: #94a3b8;
+            --border-color: #334155;
+            --modal-bg: #0f172a;
 
             /* Settings Variables */
             --editor-font-size: 18px;
             --editor-line-height: 1.2;
+            --editor-width: 48rem;
+            /* max-w-3xl */
+        }
+
+        /* Themes */
+        body.theme-paper {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --accent: #0ea5e9;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --border-color: #cbd5e1;
+            --modal-bg: #ffffff;
+        }
+
+        body.theme-sunset {
+            --bg-primary: #4a3b32;
+            --bg-secondary: #3d2f26;
+            --accent: #fdba74;
+            --text-main: #fff7ed;
+            --text-dim: #d6cbbd;
+            --border-color: #786354;
+            --modal-bg: #4a3b32;
+        }
+
+        /* Helper Utilities for themes */
+        .glass-panel {
+            border-color: var(--border-color) !important;
+            background: var(--bg-secondary) !important;
+            opacity: 0.95;
+        }
+
+        #settings-panel {
+            background-color: var(--modal-bg) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        header {
+            border-color: var(--border-color) !important;
         }
 
         /* Accessibility Overrides */
@@ -78,6 +119,7 @@
             line-height: var(--editor-line-height);
             font-size: var(--editor-font-size);
             padding-bottom: 50vh;
+            max-width: var(--editor-width) !important;
         }
 
         /* Fountain Elements */
@@ -286,22 +328,55 @@
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300"
             id="settings-panel">
-            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i data-lucide="accessibility" class="w-6 h-6 text-sky-400"></i>
-                    Settings & Accessibility
+
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+                <h2 class="text-xl font-bold flex items-center gap-2" style="color: var(--text-main)">
+                    <i data-lucide="sliders" class="w-6 h-6 text-sky-400"></i>
+                    Settings
                 </h2>
-                <button onclick="toggleSettings()" class="text-slate-400 hover:text-white transition-colors">
+                <button onclick="toggleSettings()" class="text-slate-400 hover:text-red-400 transition-colors">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
 
-            <div class="p-6 space-y-8">
+            <!-- Tabs -->
+            <div class="flex border-b border-slate-700">
+                <button onclick="switchTab('general')" id="tab-general"
+                    class="flex-1 py-3 text-sm font-medium border-b-2 border-sky-500 text-sky-400 transition-colors">General</button>
+                <button onclick="switchTab('shortcuts')" id="tab-shortcuts"
+                    class="flex-1 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-300 transition-colors">Shortcuts</button>
+            </div>
+
+            <!-- Tab Content: General -->
+            <div id="content-general" class="p-6 space-y-6 h-[400px] overflow-y-auto">
+
+                <!-- Themes -->
+                <div class="space-y-3">
+                    <label class="text-sm font-medium" style="color: var(--text-dim)">Theme</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setTheme('midnight')"
+                            class="p-2 border rounded-lg hover:border-sky-500 transition-all flex flex-col items-center gap-1 group bg-[#0f172a] border-slate-700">
+                            <div class="w-full h-8 bg-sky-500/20 rounded"></div>
+                            <span class="text-[10px] text-slate-400 font-bold group-hover:text-sky-400">Midnight</span>
+                        </button>
+                        <button onclick="setTheme('paper')"
+                            class="p-2 border rounded-lg hover:border-sky-500 transition-all flex flex-col items-center gap-1 group bg-[#f8fafc] border-slate-200">
+                            <div class="w-full h-8 bg-sky-500/20 rounded"></div>
+                            <span class="text-[10px] text-slate-500 font-bold group-hover:text-sky-400">Paper</span>
+                        </button>
+                        <button onclick="setTheme('sunset')"
+                            class="p-2 border rounded-lg hover:border-sky-500 transition-all flex flex-col items-center gap-1 group bg-[#4a3b32] border-[#786354]">
+                            <div class="w-full h-8 bg-orange-500/20 rounded"></div>
+                            <span class="text-[10px] text-[#d6cbbd] font-bold group-hover:text-sky-400">Sunset</span>
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Font Size Slider -->
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <label class="text-sm font-medium text-slate-300">Editor Font Size</label>
+                        <label class="text-sm font-medium" style="color: var(--text-dim)">Editor Font Size</label>
                         <span id="font-size-val"
                             class="text-xs font-mono bg-slate-800 px-2 py-1 rounded text-sky-400">18px</span>
                     </div>
@@ -314,35 +389,38 @@
                     </div>
                 </div>
 
-                <!-- Toggles Grid -->
-                <div class="space-y-4">
+                <!-- Accessibility Toggles -->
+                <div class="space-y-3">
+                    <label class="text-sm font-medium" style="color: var(--text-dim)">Accessibility & View</label>
+
+                    <!-- Line Width -->
+                    <label
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="move-horizontal" class="w-5 h-5 text-sky-500"></i>
+                            <span class="text-sm font-medium" style="color: var(--text-main)">Wide Mode</span>
+                        </div>
+                        <input type="checkbox" id="wide-mode-toggle"
+                            class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
+                    </label>
+
                     <!-- High Contrast -->
                     <label
-                        class="flex items-center justify-between p-3 rounded-lg border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 hover:bg-slate-800/50 transition-colors cursor-pointer group">
                         <div class="flex items-center gap-3">
-                            <div class="p-2 bg-yellow-500/10 rounded-lg group-hover:bg-yellow-500/20 transition-colors">
-                                <i data-lucide="contrast" class="w-5 h-5 text-yellow-500"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm font-medium text-slate-200">High Contrast</span>
-                                <span class="text-xs text-slate-500">Pure black & white UI</span>
-                            </div>
+                            <i data-lucide="contrast" class="w-5 h-5 text-yellow-500"></i>
+                            <span class="text-sm font-medium" style="color: var(--text-main)">High Contrast</span>
                         </div>
                         <input type="checkbox" id="high-contrast-toggle"
                             class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
                     </label>
 
-                    <!-- Readable Font -->
+                    <!-- Dyslexic Font -->
                     <label
-                        class="flex items-center justify-between p-3 rounded-lg border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 hover:bg-slate-800/50 transition-colors cursor-pointer group">
                         <div class="flex items-center gap-3">
-                            <div class="p-2 bg-pink-500/10 rounded-lg group-hover:bg-pink-500/20 transition-colors">
-                                <i data-lucide="type" class="w-5 h-5 text-pink-500"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm font-medium text-slate-200">Dyslexia Friendly</span>
-                                <span class="text-xs text-slate-500">Use readable sans-serif font</span>
-                            </div>
+                            <i data-lucide="type" class="w-5 h-5 text-pink-500"></i>
+                            <span class="text-sm font-medium" style="color: var(--text-main)">Dyslexia Friendly</span>
                         </div>
                         <input type="checkbox" id="dyslexic-font-toggle"
                             class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
@@ -350,15 +428,10 @@
 
                     <!-- Reduced Motion -->
                     <label
-                        class="flex items-center justify-between p-3 rounded-lg border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                        class="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 hover:bg-slate-800/50 transition-colors cursor-pointer group">
                         <div class="flex items-center gap-3">
-                            <div class="p-2 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition-colors">
-                                <i data-lucide="zap-off" class="w-5 h-5 text-purple-500"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm font-medium text-slate-200">Reduced Motion</span>
-                                <span class="text-xs text-slate-500">Disable all animations</span>
-                            </div>
+                            <i data-lucide="zap-off" class="w-5 h-5 text-purple-500"></i>
+                            <span class="text-sm font-medium" style="color: var(--text-main)">Reduced Motion</span>
                         </div>
                         <input type="checkbox" id="reduced-motion-toggle"
                             class="w-5 h-5 accent-sky-500 rounded border-slate-700 bg-slate-800 cursor-pointer">
@@ -366,8 +439,50 @@
                 </div>
             </div>
 
-            <div class="p-4 bg-slate-900/50 border-t border-slate-800 text-center">
-                <p class="text-[10px] text-slate-600">Settings are automatically saved.</p>
+            <!-- Tab Content: Shortcuts -->
+            <div id="content-shortcuts" class="hidden p-6 h-[400px] overflow-y-auto space-y-4">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase text-sky-500">General</h3>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Focus Mode</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Esc</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Settings</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Esc</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Manual Save</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+S</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Export</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+P</kbd></div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase text-sky-500">Formatting</h3>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Smart Tab</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Tab</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Scene</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+1</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Action</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+2</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Character</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+3</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Dialogue</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+4</kbd></div>
+                        <div class="flex justify-between"><span style="color: var(--text-dim)">Parenthetical</span> <kbd
+                                class="bg-slate-800 px-1 rounded text-sky-400 font-mono">Ctrl+5</kbd></div>
+                    </div>
+
+                </div>
+                <div class="p-4 bg-sky-500/10 rounded-lg text-xs text-slate-400 mt-4 leading-relaxed">
+                    <strong class="text-sky-400">Pro Tip:</strong> Pressing <kbd
+                        class="bg-slate-800 px-1 rounded font-mono">Tab</kbd> automatically cycles through standard
+                    script format flow:
+                    <br>
+                    Scene Heading -> Action -> Character -> Dialogue
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-900/50 border-t border-slate-700 text-center">
+                <p class="text-[10px] text-slate-500">Settings are automatically saved.</p>
             </div>
         </div>
     </div>
@@ -410,14 +525,7 @@
         const sceneList = document.getElementById('scene-list');
         const characterList = document.getElementById('character-list');
 
-        // Settings Elements
-        const settingsModal = document.getElementById('settings-modal');
-        const settingsPanel = document.getElementById('settings-panel');
-        const fontSizeSlider = document.getElementById('font-size-slider');
-        const fontSizeVal = document.getElementById('font-size-val');
-        const highContrastToggle = document.getElementById('high-contrast-toggle');
-        const dyslexicFontToggle = document.getElementById('dyslexic-font-toggle');
-        const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+
 
         let scenes = [];
         let characters = new Set();
@@ -576,6 +684,16 @@
 
         // --- Settings & Accessibility Logic ---
 
+        // Settings Elements
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsPanel = document.getElementById('settings-panel');
+        const fontSizeSlider = document.getElementById('font-size-slider');
+        const fontSizeVal = document.getElementById('font-size-val');
+        const highContrastToggle = document.getElementById('high-contrast-toggle');
+        const dyslexicFontToggle = document.getElementById('dyslexic-font-toggle');
+        const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+        const wideModeToggle = document.getElementById('wide-mode-toggle');
+
         function toggleSettings() {
             const isHidden = settingsModal.classList.contains('hidden');
             if (isHidden) {
@@ -601,27 +719,68 @@
             if (e.target === settingsModal) toggleSettings();
         });
 
+        function switchTab(tab) {
+            // Tabs
+            const tabGen = document.getElementById('tab-general');
+            const tabShort = document.getElementById('tab-shortcuts');
+            const contentGen = document.getElementById('content-general');
+            const contentShort = document.getElementById('content-shortcuts');
+
+            if (tab === 'general') {
+                tabGen.className = tabGen.className.replace('border-transparent', 'border-sky-500').replace('text-slate-500', 'text-sky-400');
+                tabShort.className = tabShort.className.replace('border-sky-500', 'border-transparent').replace('text-sky-400', 'text-slate-500');
+
+                contentGen.classList.remove('hidden');
+                contentShort.classList.add('hidden');
+            } else {
+                tabShort.className = tabShort.className.replace('border-transparent', 'border-sky-500').replace('text-slate-500', 'text-sky-400');
+                tabGen.className = tabGen.className.replace('border-sky-500', 'border-transparent').replace('text-sky-400', 'text-slate-500');
+
+                contentGen.classList.add('hidden');
+                contentShort.classList.remove('hidden');
+            }
+        }
+
+        function setTheme(theme) {
+            document.body.classList.remove('theme-paper', 'theme-sunset');
+            if (theme !== 'midnight') {
+                document.body.classList.add('theme-' + theme);
+            }
+            applySettings(); // To save
+        }
+
         function applySettings() {
             const fontSize = fontSizeSlider.value;
             const isHighContrast = highContrastToggle.checked;
             const isDyslexic = dyslexicFontToggle.checked;
             const isReducedMotion = reducedMotionToggle.checked;
+            const isWideMode = wideModeToggle.checked;
 
             // Apply Font Size
             document.documentElement.style.setProperty('--editor-font-size', fontSize + 'px');
             fontSizeVal.innerText = fontSize + 'px';
+
+            // Apply Width
+            document.documentElement.style.setProperty('--editor-width', isWideMode ? '100%' : '48rem');
 
             // Apply Classes
             document.body.classList.toggle('high-contrast', isHighContrast);
             document.body.classList.toggle('dyslexic-font', isDyslexic);
             document.body.classList.toggle('reduced-motion', isReducedMotion);
 
+            // Determine current theme
+            let currentTheme = 'midnight';
+            if (document.body.classList.contains('theme-paper')) currentTheme = 'paper';
+            if (document.body.classList.contains('theme-sunset')) currentTheme = 'sunset';
+
             // Save to LocalStorage
             const settings = {
                 fontSize,
                 isHighContrast,
                 isDyslexic,
-                isReducedMotion
+                isReducedMotion,
+                isWideMode,
+                theme: currentTheme
             };
             localStorage.setItem('script_settings', JSON.stringify(settings));
         }
@@ -637,6 +796,8 @@
                 if (s.isHighContrast) highContrastToggle.checked = s.isHighContrast;
                 if (s.isDyslexic) dyslexicFontToggle.checked = s.isDyslexic;
                 if (s.isReducedMotion) reducedMotionToggle.checked = s.isReducedMotion;
+                if (s.isWideMode) wideModeToggle.checked = s.isWideMode;
+                if (s.theme) setTheme(s.theme);
 
                 // Apply
                 applySettings();
@@ -648,11 +809,49 @@
         highContrastToggle.addEventListener('change', applySettings);
         dyslexicFontToggle.addEventListener('change', applySettings);
         reducedMotionToggle.addEventListener('change', applySettings);
+        wideModeToggle.addEventListener('change', applySettings);
 
         // --- End Settings Logic ---
 
         // Global Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
+            // Ctrl+S for Save
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                debouncedSave();
+                updateSaveStatus('Saved (Manual)', true);
+                return;
+            }
+
+            // Ctrl+Shift+F for Focus Mode / Settings
+            if (e.ctrlKey && e.shiftKey && e.key === 'F') {
+                e.preventDefault();
+                toggleSidebar();
+                return;
+            }
+
+            // Forced Formatting Shortcuts (Ctrl+1 to Ctrl+5)
+            if (e.ctrlKey && !e.shiftKey && !e.altKey) {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    let line = range.startContainer.parentElement;
+                    // Ensure we are inside the editor
+                    if (!editor.contains(line) && line !== editor) return;
+                    if (line === editor) {
+                        // Create a div if we are on the root editor
+                        document.execCommand('formatBlock', false, 'div');
+                        line = selection.anchorNode.parentElement;
+                    }
+
+                    if (e.key === '1') { e.preventDefault(); formatLine(line, 'scene-heading'); }
+                    else if (e.key === '2') { e.preventDefault(); formatLine(line, 'action'); }
+                    else if (e.key === '3') { e.preventDefault(); formatLine(line, 'character'); }
+                    else if (e.key === '4') { e.preventDefault(); formatLine(line, 'dialogue'); }
+                    else if (e.key === '5') { e.preventDefault(); formatLine(line, 'parenthetical'); }
+                }
+            }
+
             // Escape to toggle settings or sidebar
             if (e.key === 'Escape') {
                 if (!settingsModal.classList.contains('hidden')) {
