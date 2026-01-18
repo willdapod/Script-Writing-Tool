@@ -34,15 +34,11 @@ public class MainViewModel : ViewModelBase
         set { _selectedTransition = value; RaisePropertyChanged(); }
     }
 
-    public ICommand AddCharacterCommand { get; }
-    public ICommand AddSceneCommand { get; }
-    public ICommand AddScriptLineCommand { get; }
-    public ICommand SaveCommand { get; }
-    public ICommand LoadCommand { get; }
-    public ICommand AddTransitionCommand { get; }
+    public ICommand OpenCharacterDetailsCommand { get; }
 
     public MainViewModel()
     {
+        OpenCharacterDetailsCommand = new RelayCommand(OpenCharacterDetails); 
         AddCharacterCommand = new RelayCommand(AddCharacter);
         AddSceneCommand = new RelayCommand(AddScene);
         AddScriptLineCommand = new RelayCommand(AddScriptLine);
@@ -51,19 +47,41 @@ public class MainViewModel : ViewModelBase
         AddTransitionCommand = new RelayCommand(AddTransition);
     }
 
+    private void OpenCharacterDetails()
+    {
+        if (SelectedCharacter != null)
+        {
+            var window = new CharacterDetailsWindow(SelectedCharacter);
+            window.ShowDialog();
+            RaisePropertyChanged(nameof(Characters));
+        }
+    }
+
+    public ICommand AddCharacterCommand { get; }
+    public ICommand AddSceneCommand { get; }
+    public ICommand AddScriptLineCommand { get; }
+    public ICommand SaveCommand { get; }
+    public ICommand LoadCommand { get; }
+    public ICommand AddTransitionCommand { get; }
+
     private void AddCharacter()
     {
-        var newCharacter = new Character { Name = "New Character", Color = "#FFFFFF" };
-        Characters.Add(newCharacter);
-        SelectedCharacter = newCharacter;
+        var window = new AddCharacterWindow();
+        if (window.ShowDialog() == true)
+        {
+            Characters.Add(new Character { Name = window.CharacterName });
+        }
     }
 
     private void AddScene()
     {
-        var newScene = new Scene { Title = "New Scene" };
-        Scenes.Add(newScene);
-        CurrentScene = newScene;
+        var window = new AddSceneWindow();
+        if (window.ShowDialog() == true)
+        {
+            Scenes.Add(new Scene { Title = window.SceneTitle });
+        }
     }
+
 
     private void AddScriptLine()
     {
