@@ -1,18 +1,21 @@
-﻿using System.IO;
+using System.IO;
 using Newtonsoft.Json;
 
-public class SaveLoadService
+namespace ScriptWritingTool.Services
 {
-    private const string SaveFilePath = "script_data.json";
-
-    public static void SaveData(object data)
+    public class SaveLoadService
     {
-        File.WriteAllText(SaveFilePath, JsonConvert.SerializeObject(data));
-    }
+        private const string SaveFilePath = "script_data.json";
 
-    public static T LoadData<T>()
-    {
-        if (!File.Exists(SaveFilePath)) return default;
-        return JsonConvert.DeserializeObject<T>(File.ReadAllText(SaveFilePath));
+        public static void SaveData(object data)
+        {
+            File.WriteAllText(SaveFilePath, JsonConvert.SerializeObject(data));
+        }
+
+        public static T LoadData<T>()
+        {
+            if (!File.Exists(SaveFilePath)) return default;
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(SaveFilePath));
+        }
     }
 }

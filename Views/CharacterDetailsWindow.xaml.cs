@@ -1,22 +1,26 @@
-﻿using System.Windows;
+using System.Windows;
+using ScriptWritingTool.Models;
 
-public partial class CharacterDetailsWindow : Window
+namespace ScriptWritingTool.Views
 {
-    public Character Character { get; private set; }
-
-    public CharacterDetailsWindow(Character character)
+    public partial class CharacterDetailsWindow : Window
     {
-        InitializeComponent();
-        Character = character;
-        CharacterNameBox.Text = character.Name;
-        NotesBox.Text = character.Notes;
-    }
+        public Character Character { get; private set; }
 
-    private void SaveButton_Click(object sender, RoutedEventArgs e)
-    {
-        Character.Name = CharacterNameBox.Text;
-        Character.Notes = NotesBox.Text;
-        DialogResult = true;
-        Close();
+        public CharacterDetailsWindow(Character character)
+        {
+            InitializeComponent();
+            Character = character;
+            CharacterNameBox.Text = character.Name;
+            NotesBox.Text = character.Notes;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            Character.Name = CharacterNameBox.Text;
+            Character.Notes = NotesBox.Text;
+            DialogResult = true;
+            Close();
+        }
     }
 }

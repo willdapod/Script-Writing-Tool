@@ -1,4 +1,10 @@
-﻿public class Scene
+using System.Collections.ObjectModel;
+
+namespace ScriptWritingTool.Models
 {
-    public string Title { get; set; }
+    public class Scene
+    {
+        public string Title { get; set; }
+        public ObservableCollection<ScriptLine> ScriptLines { get; set; } = new();
+    }
 }

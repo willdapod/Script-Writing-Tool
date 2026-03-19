@@ -1,40 +1,48 @@
-﻿using System.Windows;
+using System.Windows;
 using ScriptWritingTool.ViewModels;
 
-public partial class MainWindow : Window
+namespace ScriptWritingTool.Views
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
-        DataContext = new MainViewModel();
-    }
-
-    private void ExitApplication(object sender, RoutedEventArgs e)
-    {
-        Application.Current.Shutdown();
-    }
-
-    private void AddScene_Click(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is MainViewModel vm)
+        public MainWindow()
         {
-            vm.AddScene();
+            InitializeComponent();
+            DataContext = new MainViewModel();
         }
-    }
 
-    private void AddCharacter_Click(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is MainViewModel vm)
+        private void ExitApplication(object sender, RoutedEventArgs e)
         {
-            vm.AddCharacter();
+            Application.Current.Shutdown();
         }
-    }
 
-    private void CharacterList_DoubleClick(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is MainViewModel vm)
+        private void AddScene_Click(object sender, RoutedEventArgs e)
         {
-            vm.OpenCharacterDetails();
+            if (DataContext is MainViewModel vm)
+            {
+                vm.AddScene();
+            }
+        }
+
+        private void AddCharacter_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.AddCharacter();
+            }
+        }
+
+        private void CharacterList_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.OpenCharacterDetails();
+            }
+        }
+
+        private void SceneList_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            // Optional: Implement scene-specific double click logic (e.g. focusing on the scene)
         }
     }
 }
