@@ -13,7 +13,7 @@ A modern, distraction-free screenwriting tool. Format your scripts automatically
 1.  **Standalone App**: Double-click `ScriptWriterApp.exe` to run the tool in its own window.
     > [!NOTE]
     > Requires [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to be installed on Windows.
-2.  **Web Pointer**: Alternatively, open `ScriptWriter.html` in any modern web browser.
+2.  **Web Pointer**: Alternatively, open `index.html` in any modern web browser or visit the live version on GitHub Pages (once deployed).
 3.  Start writing!
 
 ## Shortcuts
